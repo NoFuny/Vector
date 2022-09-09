@@ -2870,6 +2870,7 @@ MonoBehaviour:
   ArbitraryAxisY: {fileID: 1302853665}
   MaterialAxisX: {fileID: 2100000, guid: b44196c46e3a0f6418cd1ed50f9035d5, type: 2}
   MaterialAxisY: {fileID: 2100000, guid: 57f5e2920824e664ca383b88d76f0b14, type: 2}
+  MaterialCoordinates: {fileID: 2100000, guid: 9e82dc2733af3c141957518a9760a3e5, type: 2}
   wayPoint: {fileID: 627253817}
   gridLength: 10
 --- !u!114 &627253817
@@ -4390,7 +4391,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1443576258}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.998346
+  m_Size: 0.99821275
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5415,7 +5416,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -90, y: 241.50856}
+  m_AnchoredPosition: {x: -90, y: 241.48265}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1543052633

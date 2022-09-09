@@ -133,7 +133,7 @@ public class MenuUI : MonoBehaviour
     { 
         TimeSpan timeSpan = TimeSpan.FromSeconds(time);
         string miliisecond = timeSpan.ToString("fffffff");
-        miliisecond = miliisecond.Substring(0, miliisecond.Length - 4);
+        miliisecond = miliisecond.Substring(0, miliisecond.Length - 5);
         textTime.text = timeSpan.ToString("mm':'ss") + $":{miliisecond}";
     }
 

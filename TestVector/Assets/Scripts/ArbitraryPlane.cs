@@ -7,7 +7,7 @@ using UnityEngine;
 public class ArbitraryPlane : MonoBehaviour
 {
     [SerializeField] private GameObject ArbitraryAxisX, ArbitraryAxisY;
-    [SerializeField] private Material MaterialAxisX, MaterialAxisY;
+    [SerializeField] private Material MaterialAxisX, MaterialAxisY, MaterialCoordinates;
     [SerializeField]  private WayPoint wayPoint;
     private float distanceAxisX, distanceAxisY;
 
@@ -18,6 +18,17 @@ public class ArbitraryPlane : MonoBehaviour
 
     LineRenderer linePlayerX, linePlayerY;
 
+    private void Start()
+    {
+
+         linePlayerX = CreateLine(MaterialAxisX);
+    }
+    private void Awake()
+    {
+      
+
+        
+    }
     //Получение произвольной координаты Х
     public void ArrowAxisX(Vector2 point)
     {
@@ -91,13 +102,49 @@ public class ArbitraryPlane : MonoBehaviour
         return ArbitrarySumm;
     }
 
-   /* public Vector2 GetAbsolutePoint(Vector2 poit)
+    public Vector2 GetAbsolutePoint(Vector2 poit)
     {
-        var x = new Vector2(poit.x / ArbitraryVectorX.x, poit.y / ArbitraryVectorX.y);
-        var y = new Vector2(poit.y / ArbitraryVectorY.x, poit.y / ArbitraryVectorY.y);
-        Vector2 ArbitrarySumm = x;
-        return ArbitrarySumm;
-    }*/
+        //var x = (poit - ArbitraryVectorY)/ArbitraryVectorX;
+        // var y = (poit - ArbitraryVectorX) / ArbitraryVectorY;
+        var x = poit.x  /( ArbitraryVectorX.x+ArbitraryVectorY.x);
+        var y = poit.y / (ArbitraryVectorX.y + ArbitraryVectorY.y);
+        Vector2 result = new Vector2 (x,y);
+        Debug.Log($"{poit/(ArbitraryVectorX+ArbitraryVectorY)}");
+        return result;
+    }
 
+    public void PaintCoordinates(Vector2 position)
+    {
+
+        if(linePlayerX ==null) linePlayerX= CreateLine(MaterialCoordinates);
+        if (linePlayerY == null) linePlayerY = CreateLine(MaterialCoordinates);
+
+         var paintX = Intersection(position,position-(ArbitraryVectorX*gridLength),ArbitraryZero,ArbitraryVectorY*gridLength);
+         var paintY = Intersection(position, position - (ArbitraryVectorY * gridLength), ArbitraryZero, ArbitraryVectorX * gridLength);
+
+        Debug.Log(paintX);
+
+        linePlayerX.SetPosition(0, position);
+        linePlayerX.SetPosition(1, paintX);
+
+        linePlayerY.SetPosition(0, position);
+        linePlayerY.SetPosition(1, paintY);
+    }
+
+     public Vector2 Intersection(Vector2 A, Vector2 B, Vector2 C, Vector2 D)
+    {
+        float xo = A.x, yo = A.y;
+        float p = B.x - A.x, q = B.y - A.y;
+
+        float x1 = C.x, y1 = C.y;
+        float p1 = D.x - C.x, q1 = D.y - C.y;
+
+        float x = (xo * q * p1 - x1 * q1 * p - yo * p * p1 + y1 * p * p1) /
+            (q * p1 - q1 * p);
+        float y = (yo * p * q1 - y1 * p1 * q - xo * q * q1 + x1 * q * q1) /
+            (p * q1 - p1 * q);
+
+        return new Vector2(x, y);
+    }
 
 }
