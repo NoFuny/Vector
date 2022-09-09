@@ -107,66 +107,44 @@ public class GameManager : MonoBehaviour
 
             //Программа в режиме движения к следующей точки
             case ModeDrawing.MoveOnePoint:
-                MovePlayer();
-                /*
-                timeWalking += Time.deltaTime;
-                menuUI.TimeWalking(timeWalking);
-                if (stepWalking < stepCount)
-                {
-                    arbitraryPlane.PaintCoordinates(mainPlayer.transform.position);
-
-                    if (view3D) AnimationText3D(stepWalking, mainPlayer.transform.position);
-
-                    mainPlayer.transform.position = Vector3.MoveTowards(mainPlayer.transform.position, points[stepWalking], Time.deltaTime * Speed *  Vector2.Distance(arbitraryPlane.ArbitraryVectorX+arbitraryPlane.ArbitraryVectorY, Vector2.zero));
-                    if (mainPlayer.transform.position == new Vector3(points[stepWalking].x, points[stepWalking].y, 0f))
-                    {
-                        stepWalking++;
-                        modeDrawing= ModeDrawing.Expectation;
-                    }
-                }
-                else if (stepWalking == stepCount) modeDrawing = ModeDrawing.Expectation;*/
+                MovePlayer(mainPlayer.transform.position);
                 break;
 
             //Программа в режиме движения по всем маршруту
             case ModeDrawing.MoveAllPoint:
-                MovePlayer();
-               /* timeWalking += Time.deltaTime;
-                menuUI.TimeWalking(timeWalking);
-                if (stepWalking < stepCount)
-                {
-                    if (view3D) AnimationText3D(stepWalking, mainPlayer.transform.position);
-                    mainPlayer.transform.position = Vector3.MoveTowards(mainPlayer.transform.position, points[stepWalking], Time.deltaTime * Speed);
-                    if (mainPlayer.transform.position == new Vector3(points[stepWalking].x, points[stepWalking].y, 0f))
-                    {
-                        stepWalking++;
-                    }
-                }
-                else if (stepWalking == stepCount) modeDrawing = ModeDrawing.Expectation; */
+                MovePlayer(mainPlayer.transform.position);
                 break;
-
-
         }
     }
 
-    public void MovePlayer()
+    public void MovePlayer(Vector3 position )
     {
         timeWalking += Time.deltaTime;
         menuUI.TimeWalking(timeWalking);
         if (stepWalking < stepCount)
         {
-            arbitraryPlane.PaintCoordinates(mainPlayer.transform.position);
+            arbitraryPlane.PaintCoordinates(position);
 
-            if (view3D) AnimationText3D(stepWalking, mainPlayer.transform.position);
+            if (view3D) AnimationText3D(stepWalking, position);
 
-            mainPlayer.transform.position = Vector3.MoveTowards(mainPlayer.transform.position, points[stepWalking], Time.deltaTime * Speed );
-            if (mainPlayer.transform.position == new Vector3(points[stepWalking].x, points[stepWalking].y, 0f))
-            {
+            // mainPlayer.transform.position = Vector3.MoveTowards(mainPlayer.transform.position, points[stepWalking], Time.deltaTime * Speed );
+
+            // mainPlayer.transform.Translate(new Vector3(points[stepWalking].x*Time.deltaTime * Speed * arbitraryPlane.DistanceX, points[stepWalking].y * Time.deltaTime * Speed * arbitraryPlane.DistanceY,0));
+            // mainPlayer.transform.position= Vector3.MoveTowards(position, points[stepWalking], Time.deltaTime * Speed*arbitraryPlane.DistanceX);
+
+            mainPlayer.transform.Translate(points[stepWalking] *Time.deltaTime * Speed );
+            Debug.Log(Vector2.Distance(mainPlayer.transform.position, points[stepWalking]));
+
+           if (mainPlayer.transform.position == new Vector3(points[stepWalking].x, points[stepWalking].y, 0f))
+          // if (Vector2.Distance(mainPlayer.transform.position, points[stepWalking])<0.1)
+                {
                 stepWalking++;
                 if(modeDrawing==ModeDrawing.MoveOnePoint) modeDrawing = ModeDrawing.Expectation;
             }
         }
         else if (stepWalking == stepCount) modeDrawing = ModeDrawing.Expectation;
     }
+
 
     //Смена режимы работы с программой
     public void SetMode(int modeInt)

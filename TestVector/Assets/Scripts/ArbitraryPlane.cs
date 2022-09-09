@@ -11,9 +11,12 @@ public class ArbitraryPlane : MonoBehaviour
     [SerializeField]  private WayPoint wayPoint;
     private float distanceAxisX, distanceAxisY;
 
+
     Vector2 ArbitraryZero = Vector2.zero;
     public Vector2 ArbitraryVectorX { get; set; }
     public Vector2 ArbitraryVectorY { get; set; }
+    public float DistanceX { get { return distanceAxisX; } }
+    public float DistanceY { get { return distanceAxisY; } }
     public int gridLength = 3;
 
     LineRenderer linePlayerX, linePlayerY;
@@ -122,7 +125,7 @@ public class ArbitraryPlane : MonoBehaviour
          var paintX = Intersection(position,position-(ArbitraryVectorX*gridLength),ArbitraryZero,ArbitraryVectorY*gridLength);
          var paintY = Intersection(position, position - (ArbitraryVectorY * gridLength), ArbitraryZero, ArbitraryVectorX * gridLength);
 
-        Debug.Log(paintX);
+       // Debug.Log(paintX);
 
         linePlayerX.SetPosition(0, position);
         linePlayerX.SetPosition(1, paintX);
