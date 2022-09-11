@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44282466, g: 0.4919811, b: 0.5717476, a: 1}
+  m_IndirectSpecularColor: {r: 0.4428249, g: 0.4919815, b: 0.5717479, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1424,6 +1424,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 963194227}
   camera3D: {fileID: 1134916243}
+  targetCamera3D: {fileID: 1836019013}
+  barriers: {fileID: 1281912879}
+  arbitraryPlane: {fileID: 627253816}
+  wayPoint: {fileID: 627253817}
+  menuUI: {fileID: 1598871770}
+  player: {fileID: 1437213869}
   Player3D: {fileID: 903164811}
   Player2D: {fileID: 1836630629}
 --- !u!4 &299746914
@@ -1452,6 +1458,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eb09cdc2021ef841ab6727834757b3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wayPoint: {fileID: 627253817}
+  menuUI: {fileID: 1598871770}
 --- !u!1 &366033735
 GameObject:
   m_ObjectHideFlags: 0
@@ -2746,18 +2754,6 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1598871770}
         m_TargetAssemblyTypeName: MenuUI, Assembly-CSharp
-        m_MethodName: UIPanelTools
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1598871770}
-        m_TargetAssemblyTypeName: MenuUI, Assembly-CSharp
         m_MethodName: UIRestart
         m_Mode: 1
         m_Arguments:
@@ -2767,18 +2763,6 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1598871770}
-        m_TargetAssemblyTypeName: MenuUI, Assembly-CSharp
-        m_MethodName: UICameraView3D
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &611801827
 MonoBehaviour:
@@ -3393,8 +3377,8 @@ Transform:
   m_Children:
   - {fileID: 1437213865}
   - {fileID: 196477521}
-  - {fileID: 1134916244}
   - {fileID: 1502244696}
+  - {fileID: 1836019013}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4027,7 +4011,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &1134916242
 AudioListener:
   m_ObjectHideFlags: 0
@@ -4090,8 +4074,8 @@ Transform:
   m_LocalPosition: {x: 0, y: -5, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 903164812}
-  m_RootOrder: 2
+  m_Father: {fileID: 1836019013}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -60, y: 0, z: 0}
 --- !u!1 &1232003301
 GameObject:
@@ -4390,8 +4374,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1443576259}
   m_HandleRect: {fileID: 1443576258}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.99821275
+  m_Value: 0
+  m_Size: 0.9997856
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4465,6 +4449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstaclesPrefab: {fileID: 334786702849353420, guid: dfdf4912fc6a97b4a9533dd71b5a5db2, type: 3}
   parentBarrier: {fileID: 1281912878}
+  arbitraryPlane: {fileID: 627253816}
 --- !u!4 &1281912880
 Transform:
   m_ObjectHideFlags: 0
@@ -4828,6 +4813,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b87116ae6072804e92f0427790a0a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 299746913}
   Player3D: {fileID: 903164812}
   textMesh: {fileID: 1502244697}
 --- !u!1 &1437631225
@@ -5239,7 +5225,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 903164812}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!102 &1502244697
 TextMesh:
@@ -5416,7 +5402,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -90, y: 241.48265}
+  m_AnchoredPosition: {x: -90, y: 241.50856}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1543052633
@@ -5771,6 +5757,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 959cbc452a1f94f43aab0b0bc13284c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 299746913}
+  arbitraryPlane: {fileID: 627253816}
+  wayPoint: {fileID: 627253817}
   barrier: {fileID: 1281912879}
   inputRangeGrid: {fileID: 544023332}
   inputSpeed: {fileID: 237727541}
@@ -6963,6 +6952,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1836019012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1836019013}
+  m_Layer: 0
+  m_Name: TargetCam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1836019013
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836019012}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1134916244}
+  m_Father: {fileID: 903164812}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1836183920
 GameObject:
   m_ObjectHideFlags: 0

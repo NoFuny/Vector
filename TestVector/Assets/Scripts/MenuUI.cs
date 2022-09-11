@@ -8,9 +8,9 @@ using UnityEngine.UI;
 //Класс описываюшьй поведения UI 
 public class MenuUI : MonoBehaviour
 {
-    private GameManager gameManager;
-    private ArbitraryPlane arbitraryPlane;
-    private WayPoint wayPoint;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private ArbitraryPlane arbitraryPlane;
+    [SerializeField] private WayPoint wayPoint;
     [SerializeField] Barrier barrier;
 
     [SerializeField] InputField inputRangeGrid, inputSpeed;
@@ -20,24 +20,12 @@ public class MenuUI : MonoBehaviour
     [SerializeField] Text textTime,erroeBarrier;
 
     [SerializeField] private GameObject textPointPrefab, parentTextPointPrefa;
-    private void Awake()
-    {
-        gameManager = FindObjectOfType <GameManager>();
-        arbitraryPlane = FindObjectOfType<ArbitraryPlane>();
-        wayPoint = FindObjectOfType<WayPoint>();
 
-    }
     //Выбор режима рисования вектора Х
-    public void UIMenuAxisX()
-    {
-        gameManager.SetMode(1);
-    }
+    public void UIMenuAxisX() {gameManager.SetMode(1);}
 
     //Выбор режима рисования вектора У
-    public void UIMenuAxisY()
-    {
-        gameManager.SetMode(2);
-    }
+    public void UIMenuAxisY() {gameManager.SetMode(2);}
 
     //Установка размерности системы координта
     public void UIGridLength()
@@ -71,7 +59,6 @@ public class MenuUI : MonoBehaviour
             var x = Convert.ToSingle(inputAxisXPoint.text.Replace('.', ','));
             var y = Convert.ToSingle(inputAxisYPoint.text.Replace('.',','));
             wayPoint.AddPoint(new Vector2(x, y));
-
             UIAddPointText(x, y);
         }
     }
@@ -99,11 +86,7 @@ public class MenuUI : MonoBehaviour
         }
     }
 
-    //удаление всех барьером с системы координат
-    public void UICleanBarrier()
-    {
-        barrier.CleanBarrier();
-    }
+
 
     //Удаление всех точек с ситемы координат
         public void UICleanPoint()
@@ -122,11 +105,6 @@ public class MenuUI : MonoBehaviour
         wayPoint.CleanPoints();
     }
 
-    //Отключение панели инструменто
-    public void UIPanelTools (bool value) { panelTools.SetActive(value); panelTools3D.SetActive(!value); }
-    public void UIPanelTools3D(bool value) { panelTools3D.SetActive(value); }
-    //включение и отключение трехмерного вида
-    public void UICameraView3D(bool value)   {       gameManager.CameraView3D(value);   }
 
     //Установка таймера, после запуска
     public void TimeWalking(float time)   
@@ -137,12 +115,10 @@ public class MenuUI : MonoBehaviour
         textTime.text = timeSpan.ToString("mm':'ss") + $":{miliisecond}";
     }
 
-    //Сброс пути, возращение в начала координат
     public void UIRestart() { gameManager.Restart(); }
-
-    //вывод ошибки о столновении
-    public void UIErrorBarrie(bool error)
-    {
-        erroeBarrier.gameObject.SetActive(error);
-    }
+    public void UIErrorBarrie(bool error) {erroeBarrier.gameObject.SetActive(error);}
+    public void UIPanelTools(bool value) { panelTools.SetActive(value); panelTools3D.SetActive(!value); }
+    public void UIPanelTools3D(bool value) { panelTools3D.SetActive(value); }
+    public void UICameraView3D(bool value) { gameManager.CameraView3D(value); }
+    public void UICleanBarrier() { barrier.CleanBarrier(); }
 }

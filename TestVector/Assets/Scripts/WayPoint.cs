@@ -10,15 +10,6 @@ public class WayPoint : MonoBehaviour
 
     private List<Point> listPoint = new List<Point>();
 
-    //Перерасчет положения точек в пространстве
-    public void RefrashPoint()
-
-    {
-        foreach (var point in listPoint)
-        {
-            point.MovePoint();
-        }
-    }
 
     //Добавление точек в простанстве
     public void AddPoint(Vector2 pointСoordinates)
@@ -28,12 +19,7 @@ public class WayPoint : MonoBehaviour
         listPoint.Add(point);
     }
 
-    //Удаление всех точек из списка
-    public void CleanPoints()   {listPoint.Clear();}
-
-    //Возвращает количество точек
-    public int CountPoint() {return listPoint.Count;}
-
+    
     //Получает список АБСОЛЮТНЫХ координ точек
     public Vector2[] GetСoordinatePoint()
     {
@@ -57,4 +43,16 @@ public class WayPoint : MonoBehaviour
         }
         return array;
     }
+
+    public void CleanPoints() { listPoint.Clear(); }
+
+    public void RefrashPoint()
+
+    {
+        foreach (var point in listPoint)
+        {
+            point.MovePoint();
+        }
+    }
+    public int CountPoint() { return listPoint.Count; }
 }

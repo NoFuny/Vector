@@ -9,29 +9,19 @@ public class ArbitraryPlane : MonoBehaviour
     [SerializeField] private GameObject ArbitraryAxisX, ArbitraryAxisY;
     [SerializeField] private Material MaterialAxisX, MaterialAxisY, MaterialCoordinates;
     [SerializeField]  private WayPoint wayPoint;
-    private float distanceAxisX, distanceAxisY;
-
-
-    Vector2 ArbitraryZero = Vector2.zero;
+   
     public Vector2 ArbitraryVectorX { get; set; }
     public Vector2 ArbitraryVectorY { get; set; }
     public float DistanceX { get { return distanceAxisX; } }
     public float DistanceY { get { return distanceAxisY; } }
     public int gridLength = 3;
+    
+    private float speedX, speedY = 0;
+    private float distanceAxisX, distanceAxisY;
+    private LineRenderer linePlayerX, linePlayerY;
+    private Vector2 ArbitraryZero = Vector2.zero;
 
-    LineRenderer linePlayerX, linePlayerY;
 
-    private void Start()
-    {
-
-         linePlayerX = CreateLine(MaterialAxisX);
-    }
-    private void Awake()
-    {
-      
-
-        
-    }
     //Получение произвольной координаты Х
     public void ArrowAxisX(Vector2 point)
     {
@@ -105,16 +95,6 @@ public class ArbitraryPlane : MonoBehaviour
         return ArbitrarySumm;
     }
 
-    public Vector2 GetAbsolutePoint(Vector2 poit)
-    {
-        //var x = (poit - ArbitraryVectorY)/ArbitraryVectorX;
-        // var y = (poit - ArbitraryVectorX) / ArbitraryVectorY;
-        var x = poit.x  /( ArbitraryVectorX.x+ArbitraryVectorY.x);
-        var y = poit.y / (ArbitraryVectorX.y + ArbitraryVectorY.y);
-        Vector2 result = new Vector2 (x,y);
-        Debug.Log($"{poit/(ArbitraryVectorX+ArbitraryVectorY)}");
-        return result;
-    }
 
     public void PaintCoordinates(Vector2 position)
     {
@@ -122,10 +102,8 @@ public class ArbitraryPlane : MonoBehaviour
         if(linePlayerX ==null) linePlayerX= CreateLine(MaterialCoordinates);
         if (linePlayerY == null) linePlayerY = CreateLine(MaterialCoordinates);
 
-         var paintX = Intersection(position,position-(ArbitraryVectorX*gridLength),ArbitraryZero,ArbitraryVectorY*gridLength);
-         var paintY = Intersection(position, position - (ArbitraryVectorY * gridLength), ArbitraryZero, ArbitraryVectorX * gridLength);
-
-       // Debug.Log(paintX);
+        var paintX = Intersection(position,position-(ArbitraryVectorX*gridLength),ArbitraryZero,ArbitraryVectorY*gridLength);
+        var paintY = Intersection(position, position - (ArbitraryVectorY * gridLength), ArbitraryZero, ArbitraryVectorX * gridLength);
 
         linePlayerX.SetPosition(0, position);
         linePlayerX.SetPosition(1, paintX);
@@ -134,20 +112,35 @@ public class ArbitraryPlane : MonoBehaviour
         linePlayerY.SetPosition(1, paintY);
     }
 
+    //поиск точки пересечения двух векторов
      public Vector2 Intersection(Vector2 A, Vector2 B, Vector2 C, Vector2 D)
     {
         float xo = A.x, yo = A.y;
-        float p = B.x - A.x, q = B.y - A.y;
+        float po = B.x - A.x, qo = B.y - A.y;
 
         float x1 = C.x, y1 = C.y;
         float p1 = D.x - C.x, q1 = D.y - C.y;
 
-        float x = (xo * q * p1 - x1 * q1 * p - yo * p * p1 + y1 * p * p1) /
-            (q * p1 - q1 * p);
-        float y = (yo * p * q1 - y1 * p1 * q - xo * q * q1 + x1 * q * q1) /
-            (p * q1 - p1 * q);
+        float x = (xo * qo * p1 - x1 * q1 * po - yo * po * p1 + y1 * po * p1) /
+            (qo * p1 - q1 * po);
+        float y = (yo * po * q1 - y1 * p1 * qo - xo * qo * q1 + x1 * qo * q1) /
+            (po * q1 - p1 * qo);
 
         return new Vector2(x, y);
+    }  
+
+    //Коэфициент скорости, получаемы в зависимости от угла приломления точки к оси координат
+    public float GetSpeedCoefficient (Vector2 point, Vector2 pointStart)
+    {
+        speedX = Vector2.Angle(AbsVector(ArbitraryVectorX), AbsVector(point-pointStart)) / Vector2.Angle(AbsVector(ArbitraryVectorX), AbsVector(ArbitraryVectorY)) * distanceAxisY;
+        speedY = Vector2.Angle(AbsVector(ArbitraryVectorY), AbsVector(point-pointStart)) / Vector2.Angle(AbsVector(ArbitraryVectorX), AbsVector(ArbitraryVectorY)) * distanceAxisX;
+        return speedX + speedY;
+    }
+
+    private Vector2 AbsVector(Vector2 vector)
+    {
+        Vector2 result = new Vector2(Mathf.Abs(vector.x), Mathf.Abs(vector.y));
+        return result;
     }
 
 }

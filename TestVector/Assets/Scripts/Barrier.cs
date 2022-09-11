@@ -7,12 +7,8 @@ public class Barrier : MonoBehaviour
 {
     [SerializeField] GameObject obstaclesPrefab;
     [SerializeField] GameObject parentBarrier;
-    private ArbitraryPlane arbitraryPlane;
+    [SerializeField] private ArbitraryPlane arbitraryPlane;
 
-    private void Awake()
-    {
-        arbitraryPlane = FindObjectOfType<ArbitraryPlane>();
-    }
 
     //ƒобавить новый барье на поверхность
     public void AddBarrier(Vector2 positionBarier)
@@ -35,7 +31,4 @@ public class Barrier : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-
-
-
 }

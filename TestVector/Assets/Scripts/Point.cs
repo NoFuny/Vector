@@ -7,6 +7,7 @@ public class Point : MonoBehaviour
 {
 
     [SerializeField] TextMesh textMesh;
+    private ArbitraryPlane arbitraryPlane;
     private Vector2 arbitraryVector;
     private Vector2 absoluteVector;
     public Vector2 ArbitraryVector 
@@ -23,8 +24,7 @@ public class Point : MonoBehaviour
         }
     }
     public Vector2 AbsoluteVector {get { return absoluteVector;}}
-    private ArbitraryPlane arbitraryPlane;
-   
+    
     private void Awake()
     {
         arbitraryPlane = FindObjectOfType<ArbitraryPlane>();

@@ -8,17 +8,13 @@ using UnityEngine;
 //Класс предназначен для импорта и експорта точек в текстовом формате
 public class Saving : MonoBehaviour
 {
+    [SerializeField] private WayPoint wayPoint;
+    [SerializeField] private MenuUI menuUI;
+
     private string pathSaveFolder;
     private string pathLoadFolder;
     private Vector2[] arbitraryPoints;
 
-    private WayPoint wayPoint;
-    private MenuUI menuUI;
-    private void Awake()
-    {
-        wayPoint = FindObjectOfType<WayPoint>();
-        menuUI = FindObjectOfType<MenuUI>();
-    }
 
     //Сохраняет точки в указанную папку, сохраняет под именем "Points"
     public void SaveFolder()

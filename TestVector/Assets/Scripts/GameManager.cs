@@ -7,14 +7,16 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Camera camera3D;
-    private Barrier barriers;
+    [SerializeField] private Transform targetCamera3D;
 
-    private ArbitraryPlane arbitraryPlane;
-    private WayPoint wayPoint;
-    private MenuUI menuUI;
-    private Player player;
+    [SerializeField] private Barrier barriers;
+    [SerializeField] private ArbitraryPlane arbitraryPlane;
+    [SerializeField] private WayPoint wayPoint;
+    [SerializeField] private MenuUI menuUI;
+    [SerializeField] private Player player;
 
-    private Vector2 mouseWordPosicion;
+    private Vector2 pointStart = Vector2.zero;
+   // private Vector2 mouseWordPosicion;
     private ModeDrawing modeDrawing;
     private Vector2[] points;
     private float timeWalking;
@@ -27,15 +29,12 @@ public class GameManager : MonoBehaviour
     private GameObject mainPlayer;
 
     public float Speed { get; set; } = 1;
+
+
     private void Awake()
     {
         modeDrawing = ModeDrawing.Expectation;
-        arbitraryPlane = FindObjectOfType<ArbitraryPlane>();
-        wayPoint = FindObjectOfType<WayPoint>();
-        menuUI = FindObjectOfType<MenuUI>();
-        barriers = FindObjectOfType<Barrier>();
         CameraView3D(false);
-
     }
 
     //Перечисление, которое отображает варианты работы с приложением.
@@ -62,87 +61,80 @@ public class GameManager : MonoBehaviour
         {
             //Программа в режиме ожидания, отлеживает нажатие на 3д объект
             case ModeDrawing.Expectation:
+                RotationCam3D();
                 if (Input.GetMouseButtonDown(0))
-            {
-                RaycastHit hit;
-                Ray ray = camera3D.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit))
                 {
-                        if (hit.transform.gameObject.tag == "Player")
-                        {
-                            SetMode(3);
-                        }
-               }
-            }
+                    RaycastHit hit;
+                    Ray ray = camera3D.ScreenPointToRay(Input.mousePosition);
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                          if (hit.transform.gameObject.tag == "Player")  SetMode(3);
+                          menuUI.UIPanelTools3D(false);
+                    }
+                }   
                 break;
 
             //Программа в режиме рисование вектора Х
             case ModeDrawing.ArbitraryVectorX:
 
-                mouseWordPosicion = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                arbitraryPlane.ArrowAxisX(mouseWordPosicion);
-
-                if (Input.GetMouseButtonDown(0))
-                {
-                    arbitraryPlane.ArbitraryVectorX = mouseWordPosicion;
-                    arbitraryPlane.SurfaceCalculation();
-                    barriers.CleanBarrier();
-                    modeDrawing = ModeDrawing.Expectation;
-                }
+                arbitraryPlane.ArbitraryVectorX = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                arbitraryPlane.ArrowAxisX(arbitraryPlane.ArbitraryVectorX);
+                PainAxesArrow();
                 break;
 
             //Программа в режиме рисование вектора Y
             case ModeDrawing.ArbitraryVectorY:
-                mouseWordPosicion = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                arbitraryPlane.ArrowAxisY(mouseWordPosicion);
-
-                if (Input.GetMouseButtonDown(0))
-                {
-                    arbitraryPlane.ArbitraryVectorY = mouseWordPosicion;
-                    arbitraryPlane.SurfaceCalculation();
-                    barriers.CleanBarrier();
-                    modeDrawing = ModeDrawing.Expectation;
-                }
+                arbitraryPlane.ArbitraryVectorY = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                arbitraryPlane.ArrowAxisY(arbitraryPlane.ArbitraryVectorY);
+                PainAxesArrow();
                 break;
 
             //Программа в режиме движения к следующей точки
-            case ModeDrawing.MoveOnePoint:
-                MovePlayer(mainPlayer.transform.position);
-                break;
-
-            //Программа в режиме движения по всем маршруту
-            case ModeDrawing.MoveAllPoint:
+             default:
                 MovePlayer(mainPlayer.transform.position);
                 break;
         }
     }
 
-    public void MovePlayer(Vector3 position )
+  private void PainAxesArrow()
+        {
+        if (Input.GetMouseButtonDown(0))
+        {
+            arbitraryPlane.SurfaceCalculation();
+            barriers.CleanBarrier();
+            modeDrawing = ModeDrawing.Expectation;
+        }
+    }
+
+    private void MovePlayer(Vector3 position )
     {
         timeWalking += Time.deltaTime;
         menuUI.TimeWalking(timeWalking);
+        RotationCam3D();
+        
         if (stepWalking < stepCount)
         {
             arbitraryPlane.PaintCoordinates(position);
-
+            
+            if (stepWalking != 0) pointStart = points[stepWalking - 1];
+            
             if (view3D) AnimationText3D(stepWalking, position);
-
-            // mainPlayer.transform.position = Vector3.MoveTowards(mainPlayer.transform.position, points[stepWalking], Time.deltaTime * Speed );
-
-            // mainPlayer.transform.Translate(new Vector3(points[stepWalking].x*Time.deltaTime * Speed * arbitraryPlane.DistanceX, points[stepWalking].y * Time.deltaTime * Speed * arbitraryPlane.DistanceY,0));
-            // mainPlayer.transform.position= Vector3.MoveTowards(position, points[stepWalking], Time.deltaTime * Speed*arbitraryPlane.DistanceX);
-
-            mainPlayer.transform.Translate(points[stepWalking] *Time.deltaTime * Speed );
-            Debug.Log(Vector2.Distance(mainPlayer.transform.position, points[stepWalking]));
-
-           if (mainPlayer.transform.position == new Vector3(points[stepWalking].x, points[stepWalking].y, 0f))
-          // if (Vector2.Distance(mainPlayer.transform.position, points[stepWalking])<0.1)
-                {
+            mainPlayer.transform.position = Vector3.MoveTowards(mainPlayer.transform.position, points[stepWalking], Time.deltaTime * Speed * arbitraryPlane.GetSpeedCoefficient(points[stepWalking],pointStart));
+            if (mainPlayer.transform.position == new Vector3(points[stepWalking].x, points[stepWalking].y, 0f))
+            {
                 stepWalking++;
-                if(modeDrawing==ModeDrawing.MoveOnePoint) modeDrawing = ModeDrawing.Expectation;
+                if (modeDrawing == ModeDrawing.MoveOnePoint) modeDrawing = ModeDrawing.Expectation;
             }
         }
         else if (stepWalking == stepCount) modeDrawing = ModeDrawing.Expectation;
+    }
+
+    private void RotationCam3D()
+    {
+        if (view3D && Input.GetMouseButton(0))
+        {
+            targetCamera3D.Rotate(0, 0, -Input.GetAxis("Mouse X") * 2f);
+        }
     }
 
 
@@ -162,10 +154,10 @@ public class GameManager : MonoBehaviour
     public void CameraView3D(bool value)
     {
         view3D = value;
+        
         barriers.gameObject.SetActive(value);
         Player3D.SetActive(value);
         camera3D.gameObject.SetActive(value);
-
 
         mainCamera.gameObject.SetActive(!value);
         Player2D.SetActive(!value);
@@ -173,7 +165,6 @@ public class GameManager : MonoBehaviour
         if (value)
         {
             mainPlayer = Player3D;
-            player = FindObjectOfType<Player>();
         }
         else mainPlayer = Player2D;
 
@@ -189,18 +180,26 @@ public class GameManager : MonoBehaviour
     //Вывод ошибки о стокновении
     public void ErrorBarrier(bool error)
     {
+        menuUI.UIPanelTools3D(true);
         menuUI.UIErrorBarrie(error);
+        Debug.Log(error);
     }
 
     //Сброс маршрута, возвращение объекта в начало координат
     public void Restart()
     {
-        timeWalking = 0;
-        menuUI.TimeWalking(timeWalking);
-        stepWalking = 0;
-        mainPlayer.transform.position = new Vector3(0, 0, 0);
-        menuUI.UIErrorBarrie(false);
-        if (player!= null) player.TextPlayerOff();
+        if (arbitraryPlane.DistanceX != 0 && arbitraryPlane.DistanceY != 0)
+        {
+            SetMode(0);
+            timeWalking = 0;
+            stepWalking = 0;
+            menuUI.TimeWalking(timeWalking);
+            mainPlayer.transform.position = new Vector3(0, 0, 0);
+            pointStart = Vector2.zero;
+            menuUI.UIErrorBarrie(false);
+            if (player != null) player.TextPlayerOff();
+            arbitraryPlane.PaintCoordinates(Vector2.zero);
+        }
     }
 
     //Нахождения середины пройденого маршрута (необходимо для расчета анимации от расстояни между точками)
